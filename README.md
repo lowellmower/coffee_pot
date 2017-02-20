@@ -10,6 +10,19 @@
 - Drink Coffee
 - Champagne.
 
+# REALISTIC TODO:
+- Replace Nginx on Pi with small Go Web Server
+- Trim all fat off of Pi (remove Ruby, camera software, etc.)
+- Determine if docker/swarm can be used
+- ~~Set up port forwarding~~
+- ~~Add DMZ to router~~
+- ~~Setup Dynamic DNS for multiple sub-labels~~
+- ~~Add/Configure/Daemonize ddclient on Pi~~
+- Deploy Home Assistant to Droplet
+- Explore Docker and automation for above also
+- Determine location for state machine and polling
+- Champagne
+
 # Welcome Message from [Home Assistant](https://home-assistant.io/):
 ```terminal
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
