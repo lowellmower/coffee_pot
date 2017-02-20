@@ -37,3 +37,10 @@
 
   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
+### Commands:
+Open UI interface on default port `8123` default config at `~/.homeassistant` (Mac OSX):
+`hass --open-ui`
+
+Use a different config file:
+`hass --open-ui --config path/to/config`
+
