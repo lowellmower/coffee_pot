@@ -12,7 +12,6 @@ type handler func(w http.ResponseWriter, r *http.Request)
 
 // handler filters
 func GetOnly(h handler) handler {
-
     return func(w http.ResponseWriter, r *http.Request) {
         if r.Method == "GET" {
             h(w, r)
@@ -23,13 +22,11 @@ func GetOnly(h handler) handler {
 }
 
 func PostOnly(h handler) handler {
-
     return func(w http.ResponseWriter, r *http.Request) {
         if r.Method == "POST" {
             h(w, r)
             return
         }
-
         http.Error(w, "post only", http.StatusMethodNotAllowed)
     }
 }
@@ -45,7 +42,6 @@ func BasicAuth(pass handler) handler {
             http.Error(w, "no user/pass provided", http.StatusUnauthorized)
             return
         }
-
         if username != u || password != p {
             http.Error(w, "authorization failed", http.StatusUnauthorized)
             return
@@ -82,7 +78,6 @@ func HandleOff(w http.ResponseWriter, r *http.Request) {
     }
 }
 
-
 func main() {
     // get current status of device
     http.HandleFunc("/state", GetOnly(HandleState))
@@ -91,7 +86,7 @@ func main() {
     http.HandleFunc("/on", PostOnly(BasicAuth(HandleOn)))
 
     // turn device off
-    http.HandleFunc("/off", GetOnly(BasicAuth(HandleOff)))
+    http.HandleFunc("/off", PostOnly(BasicAuth(HandleOff)))
 
     log.Fatal(http.ListenAndServe(":8001", nil))
 }
