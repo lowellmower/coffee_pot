@@ -3,8 +3,8 @@ package main
 import (
   "io"
   "log"
+  "os"
   "net/http"
-  "fmt"
   "os/exec"
 )
 
@@ -29,17 +29,25 @@ func PostOnly(h handler) handler {
             h(w, r)
             return
         }
+
         http.Error(w, "post only", http.StatusMethodNotAllowed)
     }
 }
 
 // Auth
 func BasicAuth(pass handler) handler {
-    return func(w http.ResponseWriter, r *http.Request) {
-        username, password, _ := r.BasicAuth()
-        if username != "username" || password != "password" {
-            http.Error(w, "authorization failed", http.StatusUnauthorized)
+    username := os.Getenv("USERNAME")
+    password := os.Getenv("PASSWORD")
 
+    return func(w http.ResponseWriter, r *http.Request) {
+        u, p, ok := r.BasicAuth()
+        if !ok {
+            http.Error(w, "no user/pass provided", http.StatusUnauthorized)
+            return
+        }
+
+        if username != u || password != p {
+            http.Error(w, "authorization failed", http.StatusUnauthorized)
             return
         }
 
@@ -80,11 +88,10 @@ func main() {
     http.HandleFunc("/state", GetOnly(HandleState))
 
     // turn device on
-    http.HandleFunc("/on", GetOnly(HandleOn))
+    http.HandleFunc("/on", PostOnly(BasicAuth(HandleOn)))
 
     // turn device off
-    http.HandleFunc("/off", GetOnly(HandleOff))
+    http.HandleFunc("/off", GetOnly(BasicAuth(HandleOff)))
 
     log.Fatal(http.ListenAndServe(":8001", nil))
-    fmt.Println("Listening on port: 8001\n")
 }
