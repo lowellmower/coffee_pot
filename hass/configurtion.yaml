@@ -1,0 +1,78 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: "77 Pleasant Street"
+  # Location required to calculate the time the sun rises and sets
+  latitude: 40.7308
+  longitude: -73.9975
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 8
+  # metric for Metric, imperial for Imperial
+  unit_system: imperial
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/New_York
+
+  customize:
+    - entity_id: kitchen_coffee
+      icon: mdi:kettle
+      assumed_state: false
+
+# Show links to resources in log and frontend
+# introduction:
+
+# Enables the frontend
+frontend:
+
+http:
+  # Uncomment this to add a password (recommended!)
+  # api_password:
+  # Uncomment this if you are using SSL or running in Docker etc
+  # base_url: homebotty.com
+  # server_port: 80
+
+# Checks for available updates
+# updater:
+
+switch:
+  - platform: command_line
+    switches:
+      kitchen_coffee:
+        command_on: '/usr/bin/curl -X POST -u "${USERNAME}:${PASSWORD}" http://coffee.homebotty.com:8001/on'
+        command_off: '/usr/bin/curl -X POST -u "${USERNAME}:${PASSWORD}" http://coffee.homebotty.com:8001/off'
+        value_template: '{{ value == "1" }}'
+        friendly_name: Coffee Pot
+
+binary_sensor:
+  - platform: command_line
+    name: Coffee Pot
+    command: 'nc -vz -w 2 coffee.homebotty.com 8001 2>&1 | grep "succeeded" | wc -l'
+    sensor_class: connectivity
+    payload_on: "1"
+    payload_off: "0"
+
+# Discover some devices automatically
+# discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time.
+history:
+
+# View all events in a logbook
+logbook:
+
+# Track the sun
+sun:
+
+# Weather Prediction
+sensor:
+  - platform: template
+    sensors:
+      day_night:
+        friendly_name: 'Day/Night'
+        value_template: '{% if is_state("sun.sun", "above_horizon") %}Day{% else %}Night{% endif %}'
+        icon_template: '{% if is_state("sun.sun", "above_horizon") %}mdi:weather-sunny{% else %}mdi:weather-night{% endif %}'
+
+# Text to speech
+tts:
+  platform: google

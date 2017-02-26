@@ -11,6 +11,7 @@
 - Champagne.
 
 # REALISTIC TODO:
+- AUTOMATION AROUND ENV VARS
 - Replace Nginx on Pi with small Go Web Server
 - Trim all fat off of Pi (remove Ruby, camera software, etc.)
 - Determine if docker/swarm can be used
